@@ -6,15 +6,15 @@
 }
 
 <button type="button" onclick='location.href="@Url.Action("Index", "Recipes")"'
-        class="btn btn-default">
+        class="btn btn-submenu">
     Index
 </button>
 <button type="button" onclick='location.href="@Url.Action("Edit", "Recipes", new { id = Model.RecipeID })"'
-        class="btn btn-default">
+        class="btn btn-submenu">
     Edit
 </button>
 <button type="button" onclick='location.href="@Url.Action("Delete", "Recipes", new { id = Model.RecipeID })"'
-        class="btn btn-default">
+        class="btn btn-submenu">
     Delete
 </button>
 
@@ -27,7 +27,7 @@
 </p>
 
 <hr />
-<div>
+<div class="ingredientsList">
     @if (Model.Ingredients != null)
     {
         var list =

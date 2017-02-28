@@ -10,38 +10,155 @@
     @Html.AntiForgeryToken()
 
     <button type="button" onclick='location.href="@Url.Action("Index", "Recipes")"'
-            class="btn btn-default">
+            class="btn btn-submenu">
         Index
     </button>
     <button type="button" onclick='location.href="@Url.Action("Details", "Recipes", new { id = Model.RecipeID })"'
-            class="btn btn-default">
+            class="btn btn-submenu">
         Back
     </button>
 
-    <input type="submit" class="btn btn-default" value="Save" />
+    <input type="submit" class="btn btn-submenu" value="Save" />
 
-    <div class="form-horizontal">
+    <div class="form-horizontal recipeEditPage">
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.RecipeID)
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control recipeNameField" } })
+                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.TextAreaFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Servings, htmlAttributes: new { @class = "control-label col-md-6" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.Servings, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Servings, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.PreperationTime, htmlAttributes: new { @class = "control-label col-md-6" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.PreperationTime, new { htmlAttributes = new { @class = "form-control timeInput" } })
+                        @Html.ValidationMessageFor(model => model.PreperationTime, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.InactiveTime, htmlAttributes: new { @class = "control-label col-md-6" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.InactiveTime, new { htmlAttributes = new { @class = "form-control timeInput" } })
+                        @Html.ValidationMessageFor(model => model.InactiveTime, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CookTime, htmlAttributes: new { @class = "control-label col-md-6" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.CookTime, new { htmlAttributes = new { @class = "form-control timeInput" } })
+                        @Html.ValidationMessageFor(model => model.CookTime, "", new { @class = "text-danger" })
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.TextAreaFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
-            </div>
-        </div>
+        <h4>
+            Ingredients
+            <input type="button" value="+" onclick="addRow();" title="Click to add a new ingredient."
+                   class="btn btn-default" />
+        </h4>
+        <row>
+            <table border="1" cellpadding="6">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>
+                            Amount
+                        </th>
+                        <th>
+                            Unit
+                        </th>
+                        <th>
+                            Description
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="ingredientsTable">
 
-        <div class="form-group">
+                    @{
+                        var sortedList =
+                            from i in Model.Ingredients
+                            orderby i.SortIndex
+                            select i;
+
+                        for (int rowIndex = 0; rowIndex < sortedList.Count(); rowIndex++)
+                        {
+                            Ingredient ingredient = sortedList.ElementAt(rowIndex);
+                            <tr>
+                                <td class="gripColumn" title="Drag to reorder ingredients.">
+                                    <span class="ui-icon ui-icon-caret-2-n-s"></span>
+                                    <input type="hidden" name="Ingredients.Index" value="@rowIndex" />
+                                    <input type="hidden" name="ingredients[@rowIndex].IngredientID" value=@ingredient.IngredientID />
+                                </td>
+                                <td class="quantityColumn">
+                                    <input class="text-box single-line" title="Please enter a number."
+                                           data-val="true" data-val-number="Ingredient quantities must be a number."
+                                           id="@("Ingredients_"+rowIndex+"__Quantity")"
+                                           name="@("Ingredients["+rowIndex+"].Quantity")" type="text"
+                                           value="@ingredient.Quantity" />
+                                    <span class="field-validation-valid text-danger ingredientError" style="display: none" data-valmsg-replace="true"
+                                          data-valmsg-for="@("Ingredients["+rowIndex+"].Quantity")"></span>
+                                </td>
+                                <td class="unitOfMeasurementColumn">
+                                    <input class="text-box single-line" data-val="true"
+                                           data-val-length="The unit of measurement must be a string with a maximum length of 10."
+                                           data-val-length-max="10"
+                                           id="@("Ingredients_"+rowIndex+"__UnitOfMeasurement")"
+                                           name="@("Ingredients["+rowIndex+"].UnitOfMeasurement")" type="text"
+                                           value="@ingredient.UnitOfMeasurement" />
+                                    <span class="field-validation-valid text-danger ingredientError" style="display: none" data-valmsg-replace="true"
+                                          data-valmsg-for="@("Ingredients["+rowIndex+"].UnitOfMeasurement")"></span>
+                                </td>
+                                <td class="descriptionColumn">
+                                    <input class="text-box single-line" data-val="true"
+                                           data-val-length="The field Description must be a string with a maximum length of 50."
+                                           data-val-length-max="50"
+                                           id="@("Ingredients_"+rowIndex+"__Description")"
+                                           name="@("Ingredients["+rowIndex+"].Description")" type="text"
+                                           value="@ingredient.Description" />
+                                </td>
+                                <td class="buttonColumn">
+                                    <button type="button" class="deleteButton" title="Click here to delete this ingredient."
+                                            onclick="deleteRow(event)">
+                                        <span class="ui-icon ui-icon-trash"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+            <div id="ingredientErrors"></div>
+        </row>
+        <hr />
+        <div class="form-group row">
             @Html.LabelFor(model => model.Directions, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.TextAreaFor(model => model.Directions, new { htmlAttributes = new { @class = "form-control" } })
@@ -49,156 +166,40 @@
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Servings, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Servings, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Servings, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.PreperationTime, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.PreperationTime, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.PreperationTime, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.InactiveTime, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.InactiveTime, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.InactiveTime, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.CookTime, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CookTime, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CookTime, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Comments, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Comments, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Comments, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-    <hr />
-    <h4>Ingredients</h4>
-
-        <table border="1" cellpadding="6">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>
-                        Amount
-                    </th>
-                    <th>
-                        Unit
-                    </th>
-                    <th>
-                        Description
-                    </th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody id="sortable">
-
-                @{
-                    var sortedList =
-                        from i in Model.Ingredients
-                        orderby i.SortIndex
-                        select i;
-
-                    for (int rowIndex = 0; rowIndex < sortedList.Count(); rowIndex++)
-                    {
-                        Ingredient ingredient = sortedList.ElementAt(rowIndex);
-                        <tr>
-                            <td>
-                                <span class="ui-icon ui-icon-caret-2-n-s"></span>
-                                <input type="hidden" name="Ingredients.Index" value="@rowIndex" />
-                                <input type="hidden" name="ingredients[@rowIndex].IngredientID" value=@ingredient.IngredientID />
-                            </td>
-                            <td>
-                                <input class="text-box single-line quantityField" title="Please enter a number."
-                                       data-val="true" data-val-number="Ingredient quantities must be a number."
-                                       id="@("Ingredients_"+rowIndex+"__Quantity")"
-                                       name="@("Ingredients["+rowIndex+"].Quantity")" type="text"
-                                       value="@ingredient.Quantity" />
-                                <span class="field-validation-valid text-danger ingredientError" style="display: none" data-valmsg-replace="true"
-                                      data-valmsg-for="@("Ingredients["+rowIndex+"].Quantity")"></span>
-                            </td>
-                            <td>
-                                <input class="text-box single-line unitOfMeasurementField" data-val="true"
-                                       data-val-length="The unit of measurement must be a string with a maximum length of 10."
-                                       data-val-length-max="10"
-                                       id="@("Ingredients_"+rowIndex+"__UnitOfMeasurement")"
-                                       name="@("Ingredients["+rowIndex+"].UnitOfMeasurement")" type="text"
-                                       value="@ingredient.UnitOfMeasurement" />
-                                <span class="field-validation-valid text-danger ingredientError" style="display: none" data-valmsg-replace="true"
-                                      data-valmsg-for="@("Ingredients["+rowIndex+"].UnitOfMeasurement")"></span>
-                            </td>
-                            <td>
-                                <input class="text-box single-line descriptionField" data-val="true"
-                                       data-val-length="The field Description must be a string with a maximum length of 50."
-                                       data-val-length-max="50"
-                                       id="@("Ingredients_"+rowIndex+"__Description")"
-                                       name="@("Ingredients["+rowIndex+"].Description")" type="text"
-                                       value="@ingredient.Description" />
-                            </td>
-                            <td>
-                                <button type="button" class="deleteButton" onclick="deleteRow(event)"><span class="ui-icon ui-icon-trash"></span></button>
-                            </td>
-                        </tr>
-                    }
-                }
-            </tbody>
-        </table>
-        <div id="ingredientErrors"></div>
-
-        <br />
-
-        <input type="button" value="Add" onclick="addRow();" />
     </div>
 
-}
+                        }
 
 @* include hidden template row used to create new ingredients *@
 <table>
     <tr class="templateRow" style="display:none">
-        <td>
+        <td class="gripColumn">
             <span class="ui-icon ui-icon-caret-2-n-s"></span>
             <input type="hidden" name="Ingredients.Index" value="#" />
-            <input type="hidden" name="ingredients[#].IngredientID" value="0"/>
+            <input type="hidden" name="ingredients[#].IngredientID" value="0" />
         </td>
-        <td>
-            <input class="text-box single-line quantityField"
+        <td class="quantityColumn">
+            <input class="text-box single-line"
                    data-val="true" data-val-number="Ingredient quantities must be a number."
                    id="Ingredients_#__Quantity" name="Ingredients[#].Quantity" type="text" value="" />
             <span class="field-validation-valid text-danger" style="display: none" data-valmsg-replace="true"
                   data-valmsg-for="@("Ingredients[#].Quantity")"></span>
         </td>
-        <td>
-            <input class="text-box single-line unitOfMeasurementField" data-val="true"
+        <td class="unitOfMeasurementColumn">
+            <input class="text-box single-line" data-val="true"
                    data-val-length="The unit of measurement must be a string with a maximum length of 10."
                    data-val-length-max="10"
                    id="Ingredients_#__UnitOfMeasurement" name="Ingredients[#].UnitOfMeasurement" type="text" value="" />
             <span class="field-validation-valid text-danger" style="display: none" data-valmsg-replace="true"
                   data-valmsg-for="@("Ingredients[#].UnitOfMeasurement")"></span>
         </td>
-        <td>
-            <input class="text-box single-line descriptionField" data-val="true"
+        <td class="descriptionColumn">
+            <input class="text-box single-line" data-val="true"
                    data-val-length="The field Description must be a string with a maximum length of 50."
                    data-val-length-max="50"
                    id="Ingredients_#__Description" name="Ingredients[#].Description" type="text" value="" />
         </td>
-        <td>
+        <td class="buttonColumn">
             <button type="button" class="deleteButton" onclick="deleteRow(event)"><span class="ui-icon ui-icon-trash"></span></button>
         </td>
     </tr>
@@ -207,56 +208,50 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 
-<script src="~/Scripts/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
-<script>
-    $(document).ready(function () {
+    <script src="~/Scripts/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+    <script>
+        $(document).ready(function () {
 
-        $("#sortable").sortable({
-            revert: true
+            $("#ingredientsTable").sortable({
+                revert: true
+            });
+
+            parseValidator($('form'));
         });
 
-        // Note that the following does not work becuse MVC does the validation initialization for us... :(
-        // http://stackoverflow.com/questions/7935568/jquery-validation-show-validation-summary-during-eager-validation
-        //$("form").validate({
-        //    errorLabelContainer: $("#ingredientErrors")
-        //});
+        function parseValidator(form) {
+            form.data('validator', null);
+            $.validator.unobtrusive.parse(form);
 
-        parseValidator($('form'));
-    });
+            // copy any ingredient validation errors to the summary div
+            form.data("validator").settings.onfocusout = function (element) { $(element).valid(); };
+            form.data("validator").settings.showErrors = function (errorMap, errorList) {
+                this.defaultShowErrors();
+                $("#ingredientErrors").empty();
+                $(".field-validation-error span", $('#ingredientsTable'))
+                    .clone()
+                    .appendTo("#ingredientErrors")
+                    .wrap("<li>");
+            };
+        }
 
-    function parseValidator(form) {
-        form.data('validator', null);
-        $.validator.unobtrusive.parse(form);
+        //http://stackoverflow.com/questions/28019793/submit-same-partial-view-called-multiple-times-data-to-controller/28081308#28081308
+        //http://stackoverflow.com/questions/29837547/set-class-validation-for-dynamic-textbox-in-a-table/29838689#29838689
 
-        // copy any ingredient validation errors to the summary div
-        form.data("validator").settings.onfocusout = function (element) { $(element).valid(); };
-        form.data("validator").settings.showErrors = function (errorMap, errorList) {
-            this.defaultShowErrors();
-            $("#ingredientErrors").empty();
-            $(".field-validation-error span", $('#sortable'))
-                .clone()
-                .appendTo("#ingredientErrors")
-                .wrap("<li>");
-        };
-    }
+        function addRow() {
+            var clone = $(".templateRow").clone();
+            clone.removeClass("templateRow")
 
-    //http://stackoverflow.com/questions/28019793/submit-same-partial-view-called-multiple-times-data-to-controller/28081308#28081308
-    //http://stackoverflow.com/questions/29837547/set-class-validation-for-dynamic-textbox-in-a-table/29838689#29838689
-    
-    function addRow() {
-        var clone = $(".templateRow").clone();
-        clone.removeClass("templateRow")
+            var index = (new Date()).getTime();
+            clone.html($(clone).html().replace(/#/g, index));
 
-        var index = (new Date()).getTime();
-        clone.html($(clone).html().replace(/#/g, index ));
+            $('#ingredientsTable').append(clone);
+            parseValidator($('form'));
+            clone.show();
+        }
 
-        $('#sortable').append(clone);
-        parseValidator($('form'));
-        clone.show();
-    }
-
-    function deleteRow(event) {
-        $(event.target).closest('tr').remove();
-    }
-</script>
+        function deleteRow(event) {
+            $(event.target).closest('tr').remove();
+        }
+    </script>
 }
