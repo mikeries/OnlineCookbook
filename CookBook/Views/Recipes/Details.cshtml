@@ -53,10 +53,17 @@
     <p>@Html.DisplayFor(model => model.Servings) @Html.DisplayNameFor(model => model.Servings)</p>
 }
 
-@if (Model.Directions != null)
+@if (Model.Procedures != null)
 {
-    <h3>@Html.DisplayNameFor(model => model.Directions)</h3>
-    <p>@Html.DisplayFor(model => model.Directions)</p>
+    <h3>@Html.DisplayNameFor(model => model.Procedures)</h3>
+    <ol>
+        @foreach (Procedure procedure in Model.Procedures)
+        {
+        <li>
+            <p>@procedure.StepText</p>
+        </li>
+        }
+    </ol>
 }
 
 @if (Model.Comments != null)

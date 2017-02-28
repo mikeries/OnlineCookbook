@@ -34,27 +34,28 @@ textarea {
     border-color: #cccccc;
 }
 
-.timeInput {
-    max-width:50px;
-}
-
-.recipeEditPage textarea {
-    width: 600px;
-    max-width:600px;
-    height:100px;
-    resize:vertical;
-}
 
 .recipeEditPage .recipeNameField {
     width:500px;
     max-width:none;
 }
 
-.recipeEditPage input {
+.recipeEditPage textarea {
+    width: 500px;
+    max-width:none;
+}
+
+.recipeEditPage input{
     max-width:50px;
 }
 
-#sortable input {
+.recipeStep input{
+    max-width:none;
+    border:none;
+    width:90%;
+}
+
+#ingredientsTable input {
     border:none;
 }
 

@@ -118,52 +118,15 @@ namespace CookBook.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "RecipeID,Name,Description,Directions,Servings,PreperationTime,InactiveTime,CookTime,Comments,Ingredients")] Recipe recipe)
+        public ActionResult Edit([Bind(Include = "RecipeID,Name,Description,Servings,PreperationTime,InactiveTime,CookTime,Ingredients,Procedures")] Recipe recipe)
         {
             if (ModelState.IsValid)
             {
                 Recipe dbRecipe = db.Recipes.Find(recipe.RecipeID);
-
-                List<Ingredient> deletedIngredients = null;
-                if (recipe.Ingredients != null)
-                {
-                    var deleted =
-                        from i in dbRecipe.Ingredients
-                        where !recipe.Ingredients.Any(x => x.IngredientID == i.IngredientID)
-                        select i;
-                    deletedIngredients = deleted.ToList();
-                }
-                else
-                {
-                    deletedIngredients = dbRecipe.Ingredients;
-                }
-
-                foreach (Ingredient i in deletedIngredients.ToList())
-                {
-                    db.Ingredients.Remove(i);
-                }
-
-                if (recipe.Ingredients != null)
-                {
-                    var index = 0;
-                    foreach (Ingredient i in recipe.Ingredients)
-                    {
-                        Ingredient ingredient;
-
-                        if (i.IngredientID == 0)
-                        {
-                            ingredient = db.Ingredients.Add(i);
-                        }
-                        else
-                        {
-                            ingredient = db.Ingredients.Find(i.IngredientID);
-                        }
-
-                        db.Entry(ingredient).CurrentValues.SetValues(i);
-                        ingredient.SortIndex = index++;
-                        ingredient.RecipeID = recipe.RecipeID;
-                    }
-                }                
+                removeDeletedIngredientsFromDB(recipe, dbRecipe);
+                updateRemainingIngredients(recipe);
+                removeDeletedProceduresFromDB(recipe, dbRecipe);
+                updateRemainingProcedures(recipe);
 
                 db.Entry(dbRecipe).CurrentValues.SetValues(recipe);
                 db.Entry(dbRecipe).State = EntityState.Modified;
@@ -172,6 +135,103 @@ namespace CookBook.Controllers
                 return RedirectToAction("Edit", recipe.RecipeID);
             }
             return View(recipe);
+        }
+
+        // TODO: is there a way to make these next 4 functions generic and eliminate duplication?
+        private void removeDeletedProceduresFromDB(Recipe recipe, Recipe dbRecipe)
+        {
+
+            List<Procedure> deletedProcedures = null;
+            if (recipe.Procedures != null)
+            {
+                var deleted =
+                    from i in dbRecipe.Procedures
+                    where !recipe.Procedures.Any(x => x.ProcedureID == i.ProcedureID)
+                    select i;
+                deletedProcedures = deleted.ToList();
+            }
+            else
+            {
+                deletedProcedures = dbRecipe.Procedures;
+            }
+
+            foreach (Procedure i in deletedProcedures.ToList())
+            {
+                db.Procedures.Remove(i);
+            }
+        }
+
+        private void updateRemainingProcedures(Recipe recipe)
+        {
+            if (recipe.Procedures != null)
+            {
+                var index = 0;
+                foreach (Procedure i in recipe.Procedures)
+                {
+                    Procedure procedure;
+
+                    if (i.ProcedureID == 0)
+                    {
+                        procedure = db.Procedures.Add(i);
+                    }
+                    else
+                    {
+                        procedure = db.Procedures.Find(i.ProcedureID);
+                    }
+
+                    db.Entry(procedure).CurrentValues.SetValues(i);
+                    procedure.StepOrder = index++;
+                    procedure.RecipeID = recipe.RecipeID;
+                }
+            }
+        }
+
+        private void removeDeletedIngredientsFromDB(Recipe recipe, Recipe dbRecipe)
+        {
+
+            List<Ingredient> deletedIngredients = null;
+            if (recipe.Ingredients != null)
+            {
+                var deleted =
+                    from i in dbRecipe.Ingredients
+                    where !recipe.Ingredients.Any(x => x.IngredientID == i.IngredientID)
+                    select i;
+                deletedIngredients = deleted.ToList();
+            }
+            else
+            {
+                deletedIngredients = dbRecipe.Ingredients;
+            }
+
+            foreach (Ingredient i in deletedIngredients.ToList())
+            {
+                db.Ingredients.Remove(i);
+            }
+        }
+
+        private void updateRemainingIngredients(Recipe recipe)
+        {
+            if (recipe.Ingredients != null)
+            {
+                var index = 0;
+                foreach (Ingredient i in recipe.Ingredients)
+                {
+                    Ingredient ingredient;
+
+                    if (i.IngredientID == 0)
+                    {
+                        ingredient = db.Ingredients.Add(i);
+                    }
+                    else
+                    {
+                        ingredient = db.Ingredients.Find(i.IngredientID);
+                    }
+
+                    db.Entry(ingredient).CurrentValues.SetValues(i);
+                    ingredient.SortIndex = index++;
+                    ingredient.RecipeID = recipe.RecipeID;
+                }
+            }
         }
 
         // GET: Recipes/Delete/5

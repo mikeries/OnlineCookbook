@@ -18,8 +18,6 @@ namespace CookBook.Models
         [StringLength(200)]
         public string Description { get; set; }
 
-        public string Directions { get; set; }
-
         public int? Servings { get; set; }
 
         public double? PreperationTime { get; set; }
@@ -31,5 +29,6 @@ namespace CookBook.Models
         public string Comments { get; set; }
 
         public virtual List<Ingredient> Ingredients { get; set; }
+        public virtual List<Procedure> Procedures { get; set; }
     }
 }

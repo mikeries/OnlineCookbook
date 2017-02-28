@@ -38,7 +38,7 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.TextAreaFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.TextAreaFor(model => model.Description, new { @class = "form-control recipeDescriptionField", @rows = "4" })
                         @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -46,31 +46,31 @@
 
             <div class="col-md-6">
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Servings, htmlAttributes: new { @class = "control-label col-md-6" })
-                    <div class="col-md-6">
+                    @Html.LabelFor(model => model.Servings, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
                         @Html.EditorFor(model => model.Servings, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.Servings, "", new { @class = "text-danger" })
                     </div>
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.PreperationTime, htmlAttributes: new { @class = "control-label col-md-6" })
-                    <div class="col-md-6">
+                    @Html.LabelFor(model => model.PreperationTime, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
                         @Html.EditorFor(model => model.PreperationTime, new { htmlAttributes = new { @class = "form-control timeInput" } })
                         @Html.ValidationMessageFor(model => model.PreperationTime, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.InactiveTime, htmlAttributes: new { @class = "control-label col-md-6" })
-                    <div class="col-md-6">
+                    @Html.LabelFor(model => model.InactiveTime, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
                         @Html.EditorFor(model => model.InactiveTime, new { htmlAttributes = new { @class = "form-control timeInput" } })
                         @Html.ValidationMessageFor(model => model.InactiveTime, "", new { @class = "text-danger" })
                     </div>
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.CookTime, htmlAttributes: new { @class = "control-label col-md-6" })
-                    <div class="col-md-6">
+                    @Html.LabelFor(model => model.CookTime, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
                         @Html.EditorFor(model => model.CookTime, new { htmlAttributes = new { @class = "form-control timeInput" } })
                         @Html.ValidationMessageFor(model => model.CookTime, "", new { @class = "text-danger" })
                     </div>
@@ -120,28 +120,28 @@
                                 <td class="quantityColumn">
                                     <input class="text-box single-line" title="Please enter a number."
                                            data-val="true" data-val-number="Ingredient quantities must be a number."
-                                           id="@("Ingredients_"+rowIndex+"__Quantity")"
-                                           name="@("Ingredients["+rowIndex+"].Quantity")" type="text"
+                                           id="@("Ingredients_" + rowIndex + "__Quantity")"
+                                           name="@("Ingredients[" + rowIndex + "].Quantity")" type="text"
                                            value="@ingredient.Quantity" />
                                     <span class="field-validation-valid text-danger ingredientError" style="display: none" data-valmsg-replace="true"
-                                          data-valmsg-for="@("Ingredients["+rowIndex+"].Quantity")"></span>
+                                          data-valmsg-for="@("Ingredients[" + rowIndex + "].Quantity")"></span>
                                 </td>
                                 <td class="unitOfMeasurementColumn">
                                     <input class="text-box single-line" data-val="true"
                                            data-val-length="The unit of measurement must be a string with a maximum length of 10."
                                            data-val-length-max="10"
-                                           id="@("Ingredients_"+rowIndex+"__UnitOfMeasurement")"
-                                           name="@("Ingredients["+rowIndex+"].UnitOfMeasurement")" type="text"
+                                           id="@("Ingredients_" + rowIndex + "__UnitOfMeasurement")"
+                                           name="@("Ingredients[" + rowIndex + "].UnitOfMeasurement")" type="text"
                                            value="@ingredient.UnitOfMeasurement" />
                                     <span class="field-validation-valid text-danger ingredientError" style="display: none" data-valmsg-replace="true"
-                                          data-valmsg-for="@("Ingredients["+rowIndex+"].UnitOfMeasurement")"></span>
+                                          data-valmsg-for="@("Ingredients[" + rowIndex + "].UnitOfMeasurement")"></span>
                                 </td>
                                 <td class="descriptionColumn">
                                     <input class="text-box single-line" data-val="true"
                                            data-val-length="The field Description must be a string with a maximum length of 50."
                                            data-val-length-max="50"
-                                           id="@("Ingredients_"+rowIndex+"__Description")"
-                                           name="@("Ingredients["+rowIndex+"].Description")" type="text"
+                                           id="@("Ingredients_" + rowIndex + "__Description")"
+                                           name="@("Ingredients[" + rowIndex + "].Description")" type="text"
                                            value="@ingredient.Description" />
                                 </td>
                                 <td class="buttonColumn">
@@ -157,20 +157,40 @@
             </table>
             <div id="ingredientErrors"></div>
         </row>
-        <hr />
-        <div class="form-group row">
-            @Html.LabelFor(model => model.Directions, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.TextAreaFor(model => model.Directions, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Directions, "", new { @class = "text-danger" })
-            </div>
-        </div>
+
+        <p></p>
+
+        <h4>
+            @Html.DisplayNameFor(model => model.Procedures)
+            <input type="button" value="+" onclick="addStep();" title="Click to add a step to the procedure."
+                   class="btn btn-default" />
+        </h4>
+
+        <ol id="procedureList">
+        @{ 
+            var sortedSteps =
+            from i in Model.Procedures
+            orderby i.StepOrder
+            select i;
+
+            for (int stepIndex = 0; stepIndex < sortedSteps.Count(); stepIndex++)
+            {
+                Procedure procedure = sortedSteps.ElementAt(stepIndex);
+                <li class="recipeStep">
+                    <input type="hidden" name="Procedures.Index" value="@stepIndex" />
+                    <input type="hidden" name="Procedures[@stepIndex].ProcedureID" value=@procedure.ProcedureID />
+                    <input class="text-box single-line"
+                           id=@("Procedures_"+stepIndex+"__StepText") name=@("Procedures["+stepIndex+"].StepText") type="text" value="@procedure.StepText" />
+                </li>
+            }
+        }
+        </ol>
 
     </div>
 
                         }
 
-@* include hidden template row used to create new ingredients *@
+@* include hidden templates used to create new ingredients and steps *@
 <table>
     <tr class="templateRow" style="display:none">
         <td class="gripColumn">
@@ -204,6 +224,14 @@
         </td>
     </tr>
 </table>
+<ol style="display: none">
+    <li class="templateStep recipeStep">
+        <input type="hidden" name="Procedures.Index" value="#" />
+        <input type="hidden" name="Procedures[#].ProcedureID" value="0" />
+        <input class="text-box single-line"
+               id="Procedures_#__StepText" name="Procedures[#].StepText" type="text" value="" />
+    </li>
+</ol>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
@@ -214,6 +242,9 @@
 
             $("#ingredientsTable").sortable({
                 revert: true
+            });
+            $("#procedureList").sortable({
+                revert:true
             });
 
             parseValidator($('form'));
@@ -246,6 +277,18 @@
             clone.html($(clone).html().replace(/#/g, index));
 
             $('#ingredientsTable').append(clone);
+            parseValidator($('form'));
+            clone.show();
+        }
+
+        function addStep() {
+            var clone = $(".templateStep").clone();
+            clone.removeClass("templateStep")
+
+            var index = (new Date()).getTime();
+            clone.html($(clone).html().replace(/#/g, index));
+
+            $('#procedureList').append(clone);
             parseValidator($('form'));
             clone.show();
         }

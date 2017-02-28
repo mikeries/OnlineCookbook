@@ -32,5 +32,6 @@ namespace CookBook.Models
 
         public System.Data.Entity.DbSet<CookBook.Models.Recipe> Recipes { get; set; }
         public System.Data.Entity.DbSet<CookBook.Models.Ingredient> Ingredients { get; set; }
+        public System.Data.Entity.DbSet<CookBook.Models.Procedure> Procedures { get; set; }
     }
 }
