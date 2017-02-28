@@ -81,8 +81,11 @@
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
+            <input type="submit" value="Delete" class="btn btn-default" />
+            <button type="button" onclick='location.href="@Url.Action("Details", "Recipes", new { id = Model.RecipeID })"'
+                    class="btn btn-default">
+                Cancel
+            </button>
         </div>
     }
 </div>

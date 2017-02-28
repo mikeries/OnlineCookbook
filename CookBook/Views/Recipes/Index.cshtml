@@ -7,42 +7,25 @@
 
 <h2>Recipes</h2>
 
-<span>
-    @Html.ActionLink("Create New", "Create")
-</span>
 
 @using (Html.BeginForm("Index", "Recipes", FormMethod.Get))
 {
     <p>
-        Find by name: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
-        <input type="submit" value="Search" />
+        Find by name: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "text-box single-line" })
+        <button type="submit" class="btn btn-default">Search</button>
+        <button type="button" onclick='location.href="@Url.Action("Create", "Recipes")"'
+                class="btn btn-default">Create new</button>
     </p>
 }
 
-<table class="table">
-    <tr>
-        <th>
-            Recipe Name
-        </th>
-        <th></th>
-    </tr>
+@foreach (var item in Model)
+{
+    <div class="well">
+        <h4>@Html.ActionLink(item.Name, "Details", new { id = item.RecipeID })</h4>
+        <p>@item.Description</p>
+    </div>
+}
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.RecipeID }) |
-                @Html.ActionLink("Details", "Details", new { id = item.RecipeID }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.RecipeID })
-            </td>
-        </tr>
-    }
-
-</table>
 <br />
 Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
 

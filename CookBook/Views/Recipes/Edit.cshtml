@@ -5,14 +5,20 @@
     ViewBag.Title = "Edit";
 }
 
-<span>
-    @Html.ActionLink("Back to List", "Index")
-</span>
-
-
 @using (Html.BeginForm("Edit", "Recipes", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
+
+    <button type="button" onclick='location.href="@Url.Action("Index", "Recipes")"'
+            class="btn btn-default">
+        Index
+    </button>
+    <button type="button" onclick='location.href="@Url.Action("Details", "Recipes", new { id = Model.RecipeID })"'
+            class="btn btn-default">
+        Back
+    </button>
+
+    <input type="submit" class="btn btn-default" value="Save" />
 
     <div class="form-horizontal">
         <hr />
@@ -157,7 +163,7 @@
         <div id="ingredientErrors"></div>
 
         <br />
-        <input type="submit" value="Save" />
+
         <input type="button" value="Add" onclick="addRow();" />
     </div>
 

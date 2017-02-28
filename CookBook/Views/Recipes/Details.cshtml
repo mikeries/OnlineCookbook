@@ -5,6 +5,19 @@
     ViewBag.Title = Html.DisplayFor(m => m.Name);
 }
 
+<button type="button" onclick='location.href="@Url.Action("Index", "Recipes")"'
+        class="btn btn-default">
+    Index
+</button>
+<button type="button" onclick='location.href="@Url.Action("Edit", "Recipes", new { id = Model.RecipeID })"'
+        class="btn btn-default">
+    Edit
+</button>
+<button type="button" onclick='location.href="@Url.Action("Delete", "Recipes", new { id = Model.RecipeID })"'
+        class="btn btn-default">
+    Delete
+</button>
+
 <h2>
     @Html.DisplayFor(model => model.Name)
 </h2>
@@ -35,25 +48,21 @@
     }
 </div>
 <p></p>
-<p>@Html.DisplayFor(model => model.Servings) @Html.DisplayNameFor(model => model.Servings)</p>
 
-<h3>
-    @Html.DisplayNameFor(model => model.Directions)
-</h3>
+@if(Model.Servings != null) {
+    <p>@Html.DisplayFor(model => model.Servings) @Html.DisplayNameFor(model => model.Servings)</p>
+}
 
-<p>
-    @Html.DisplayFor(model => model.Directions)
-</p>
+@if (Model.Directions != null)
+{
+    <h3>@Html.DisplayNameFor(model => model.Directions)</h3>
+    <p>@Html.DisplayFor(model => model.Directions)</p>
+}
 
 @if (Model.Comments != null)
 {
-    <h3>
-        @Html.DisplayNameFor(model => model.Comments)
-    </h3>
-
-    <p>
-        @Html.DisplayFor(model => model.Comments)
-    </p>
+    <h3>@Html.DisplayNameFor(model => model.Comments)</h3>
+    <p>@Html.DisplayFor(model => model.Comments)</p>
 }
 
 <hr />
@@ -72,8 +81,3 @@
     }
 </div>
 <hr />
-
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.RecipeID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
