@@ -1,0 +1,19 @@
+﻿@model CookBook.Models.Ingredient
+
+<tr>
+    <td>
+        <span class="ui-icon ui-icon-caret-2-n-s"></span>
+    </td>
+    <td>
+        @Html.EditorFor(m=>m.Description)
+    </td>
+    <td>
+        @Html.EditorFor(m => m.Quantity)
+    </td>
+    <td>
+        @Html.EditorFor(m => m.UnitOfMeasurement)
+    </td>
+    <td>
+        <button type="button" class="deleteButton"><span class="ui-icon ui-icon-trash"></span></button>
+    </td>
+</tr>

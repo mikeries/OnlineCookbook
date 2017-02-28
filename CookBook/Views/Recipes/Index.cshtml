@@ -1,0 +1,50 @@
+﻿@model PagedList.IPagedList<CookBook.Models.Recipe>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Recipes";
+}
+
+<h2>Recipes</h2>
+
+<span>
+    @Html.ActionLink("Create New", "Create")
+</span>
+
+@using (Html.BeginForm("Index", "Recipes", FormMethod.Get))
+{
+    <p>
+        Find by name: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+        <input type="submit" value="Search" />
+    </p>
+}
+
+<table class="table">
+    <tr>
+        <th>
+            Recipe Name
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.RecipeID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.RecipeID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.RecipeID })
+            </td>
+        </tr>
+    }
+
+</table>
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

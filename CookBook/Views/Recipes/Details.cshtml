@@ -1,0 +1,79 @@
+﻿@model CookBook.Models.Recipe
+@using CookBook.Models
+
+@{
+    ViewBag.Title = Html.DisplayFor(m => m.Name);
+}
+
+<h2>
+    @Html.DisplayFor(model => model.Name)
+</h2>
+
+<p>
+    @Html.DisplayFor(model => model.Description)
+</p>
+
+<hr />
+<div>
+    @if (Model.Ingredients != null)
+    {
+        var list =
+            from i in Model.Ingredients
+            orderby i.SortIndex
+            select i;
+
+        Model.Ingredients = list.ToList();
+        for (int rowIndex = 0; rowIndex < Model.Ingredients.Count(); rowIndex++)
+        {
+            <div>
+                @(
+                Html.DisplayFor(m => m.Ingredients[rowIndex].Quantity) + " " + Html.DisplayFor(m => m.Ingredients[rowIndex].UnitOfMeasurement)
+                 + " " + Html.DisplayFor(m => m.Ingredients[rowIndex].Description)
+                )
+            </div>
+        }
+    }
+</div>
+<p></p>
+<p>@Html.DisplayFor(model => model.Servings) @Html.DisplayNameFor(model => model.Servings)</p>
+
+<h3>
+    @Html.DisplayNameFor(model => model.Directions)
+</h3>
+
+<p>
+    @Html.DisplayFor(model => model.Directions)
+</p>
+
+@if (Model.Comments != null)
+{
+    <h3>
+        @Html.DisplayNameFor(model => model.Comments)
+    </h3>
+
+    <p>
+        @Html.DisplayFor(model => model.Comments)
+    </p>
+}
+
+<hr />
+<div class="row">
+    @if (Model.PreperationTime != null)
+    {
+        <div class="col-md-3">@Html.DisplayNameFor(model => model.PreperationTime): @Html.DisplayFor(model => model.PreperationTime) minutes</div>
+    }
+    @if (Model.InactiveTime != null)
+    {
+        <div class="col-md-3">@Html.DisplayNameFor(model => model.InactiveTime): @Html.DisplayFor(model => model.InactiveTime) minutes</div>
+    }
+    @if (Model.CookTime != null)
+    {
+        <div class="col-md-3">@Html.DisplayNameFor(model => model.CookTime): @Html.DisplayFor(model => model.CookTime) minutes</div>
+    }
+</div>
+<hr />
+
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.RecipeID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
