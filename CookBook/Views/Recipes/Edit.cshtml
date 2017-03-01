@@ -36,7 +36,7 @@
             <div class="form-group row">
                 @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-1" })
                 <div class="col-md-11">
-                    @Html.TextAreaFor(model => model.Description, new { @class = "form-control recipeDescriptionField", @rows = "4" })
+                    @Html.TextAreaFor(model => model.Description, new { @class = "form-control recipeDescriptionField", @rows="1" })
                     @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger", @style = "display: none;" })
                 </div>
             </div>
@@ -50,7 +50,7 @@
                     </div>
                 </div>
                     
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-4">
                     @Html.LabelFor(model => model.PreperationTime, htmlAttributes: new { @class = "control-label col-md-6" })
                     <div class="col-md-6">
                         @Html.EditorFor(model => model.PreperationTime, new { htmlAttributes = new { @class = "form-control timeInput" } })
@@ -74,24 +74,24 @@
                     </div>
                 </div>
             </div>
-            <div id="recipeErrors" class="errorContainer"></div>
+            <div id="recipeErrors" class="alert alert-danger well" style="display:none;"></div>
         </div>
 
         <div id="ingredientsTable" class="row">
             <h4>
                 Ingredients
-                <input type="button" value="+" onclick="addRow();" title="Click to add a new ingredient."
-                       class="btn btn-default" />
+                <button type="button" onclick="addRow();" title="Click to add a new ingredient."
+                       class="btn btn-default">+</button>
             </h4>
 
-            <table border="1" cellpadding="6">
+            <table border="1" cellpadding="3" class="table">
                 <thead>
                     <tr>
                         <th></th>
-                        <th>
+                        <th class="text-center">
                             Amount
                         </th>
-                        <th>
+                        <th class="text-center">
                             Unit
                         </th>
                         <th>
@@ -155,41 +155,41 @@
                     }
                 </tbody>
             </table>
+            <div id="ingredientErrors" class="alert alert-danger well" style="display:none;"></div>
         </div>
-        <div id="ingredientErrors" class="well alert alert-danger"></div>
 
-        <h4>
-            @Html.DisplayNameFor(model => model.Procedures)
-            <input type="button" value="+" onclick="addStep();" title="Click to add a step to the procedure."
-                   class="btn btn-default" />
-        </h4>
+        <div class="row">
+            <h4>
+                Procedure
+                <button type="button"onclick="addStep();" title="Click to add a step to the procedure."
+                       class="btn btn-default">+</button>
+            </h4>
 
-        <ol id="procedureList">
-        @{ 
-            var sortedSteps =
-            from i in Model.Procedures
-            orderby i.StepOrder
-            select i;
+            <ol id="procedureList">
+                @{
+                    var sortedSteps =
+                    from i in Model.Procedures
+                    orderby i.StepOrder
+                    select i;
 
-            for (int stepIndex = 0; stepIndex < sortedSteps.Count(); stepIndex++)
-            {
-                Procedure procedure = sortedSteps.ElementAt(stepIndex);
-                <li class="recipeStep">
-                    <input type="hidden" name="Procedures.Index" value="@stepIndex" />
-                    <input type="hidden" name="Procedures[@stepIndex].ProcedureID" value=@procedure.ProcedureID />
-                    <textarea rows="1" data-val="true" data-val-length-max="1000"
-                        data-val-length="The field Description must be a string with a maximum length of 1000."
-                        id=@("Procedures_"+stepIndex+"__StepText") 
-                        name=@("Procedures["+stepIndex+"].StepText")>@procedure.StepText</textarea>
-                    <span class="field-validation-valid text-danger" style="display: none" data-valmsg-replace="true"
-                          data-valmsg-for="@("Procedures["+stepIndex+"].StepText")"></span>
-                </li>
-            }
-        }
-        </ol>
-        <div id="procedureErrors" class="row"></div>
-
-
+                    for (int stepIndex = 0; stepIndex < sortedSteps.Count(); stepIndex++)
+                    {
+                        Procedure procedure = sortedSteps.ElementAt(stepIndex);
+                        <li class="recipeStep">
+                            <input type="hidden" name="Procedures.Index" value="@stepIndex" />
+                            <input type="hidden" name="Procedures[@stepIndex].ProcedureID" value=@procedure.ProcedureID />
+                            <textarea rows="1" data-val="true" data-val-length-max="1000"
+                                      data-val-length="The field Description must be a string with a maximum length of 1000."
+                                      id=@("Procedures_"+stepIndex+"__StepText")
+                                      name=@("Procedures["+stepIndex+"].StepText")>@procedure.StepText</textarea>
+                                <span class="field-validation-valid text-danger" style="display: none" data-valmsg-replace="true"
+                                      data-valmsg-for="@("Procedures["+stepIndex+"].StepText")"></span>
+                            </li>
+                    }
+                }
+            </ol>
+            <div id="procedureErrors" class="alert alert-danger well" style="display:none;"></div>
+        </div>
     </div>
 
 }
@@ -261,7 +261,7 @@
                 revert:true
             });
 
-            autosize($('#procedureList textarea'));
+            autosize($('textarea'));
 
             $("#procedureList li textarea").on('blur', removeStepIfEmpty);
 

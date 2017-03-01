@@ -27,40 +27,40 @@ textarea {
     background-color:pink
 }
 
-.btn-submenu {
+.submenu {
+    margin-left:0;
+}
+
+.submenu .btn {
     margin-top: 10px;
+    margin-bottom:10px;
     color: #333333;
     background-color: #ffffff;
     border-color: #cccccc;
 }
 
-
+.recipeDescriptionField,
 .recipeEditPage .recipeNameField {
-    width:500px;
+    width:100%;
     max-width:none;
 }
-
-.recipeEditPage input{
-    max-width:50px;
+.recipeEditPage h4{
+    margin-left:10px;
 }
 
-.recipeStep textarea{
-    width: 70%;
-    height:1em;
-    border:none;
-    max-width:none;
-    max-height: 200px;
-	vertical-align: top;
+.recipeDescriptionField {
     resize:none;
+}
+
+#ingredientsTable table {
+    width:90%;
+    margin-left:auto;
+    margin-right:auto;
+    padding:4px;
 }
 
 #ingredientsTable input {
     border:none;
-}
-
-.quantityColumn,
-.unitOfMeasurementColumn {
-    width:50px;
 }
 
 .gripColumn,
@@ -73,13 +73,36 @@ textarea {
 }
 
 .unitOfMeasurementColumn input {
-    max-width:80px;
+    max-width:60px;
 }
 
 .descriptionColumn {
-    width:600px;
+    width:100%;
 }
 .descriptionColumn input {
-    width:600px;
-    max-width:600px;
+    width:100%;
+    max-width:none;
+}
+
+#procedureList li {
+    width:100%;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.recipeStep textarea{
+    width: 100%;
+    height:1em;
+    border:none;
+    max-width:none;
+    max-height: 200px;
+	vertical-align: top;
+    resize:none;
+}
+
+.ingredientsList {
+    columns: 2;
+    marker:none;
+    column-gap:40px;
+    width:80%;
 }

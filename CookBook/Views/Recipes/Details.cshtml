@@ -5,19 +5,20 @@
     ViewBag.Title = Html.DisplayFor(m => m.Name);
 }
 
-<button type="button" onclick='location.href="@Url.Action("Index", "Recipes")"'
-        class="btn btn-submenu">
-    Index
-</button>
-<button type="button" onclick='location.href="@Url.Action("Edit", "Recipes", new { id = Model.RecipeID })"'
-        class="btn btn-submenu">
-    Edit
-</button>
-<button type="button" onclick='location.href="@Url.Action("Delete", "Recipes", new { id = Model.RecipeID })"'
-        class="btn btn-submenu">
-    Delete
-</button>
-
+<div class="submenu">
+    <button type="button" onclick='location.href="@Url.Action("Index", "Recipes")"'
+            class="btn">
+        Index
+    </button>
+    <button type="button" onclick='location.href="@Url.Action("Edit", "Recipes", new { id = Model.RecipeID })"'
+            class="btn">
+        Edit
+    </button>
+    <button type="button" onclick='location.href="@Url.Action("Delete", "Recipes", new { id = Model.RecipeID })"'
+            class="btn">
+        Delete
+    </button>
+</div>
 <h2>
     @Html.DisplayFor(model => model.Name)
 </h2>
@@ -27,7 +28,7 @@
 </p>
 
 <hr />
-<div class="ingredientsList">
+<ul class="ingredientsList">
     @if (Model.Ingredients != null)
     {
         var list =
@@ -38,15 +39,15 @@
         Model.Ingredients = list.ToList();
         for (int rowIndex = 0; rowIndex < Model.Ingredients.Count(); rowIndex++)
         {
-            <div>
+            <li>
                 @(
                 Html.DisplayFor(m => m.Ingredients[rowIndex].Quantity) + " " + Html.DisplayFor(m => m.Ingredients[rowIndex].UnitOfMeasurement)
                  + " " + Html.DisplayFor(m => m.Ingredients[rowIndex].Description)
                 )
-            </div>
+            </li>
         }
     }
-</div>
+</ul>
 <p></p>
 
 @if(Model.Servings != null) {
