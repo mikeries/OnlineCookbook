@@ -40,19 +40,18 @@ textarea {
     max-width:none;
 }
 
-.recipeEditPage textarea {
-    width: 500px;
-    max-width:none;
-}
-
 .recipeEditPage input{
     max-width:50px;
 }
 
-.recipeStep input{
-    max-width:none;
+.recipeStep textarea{
+    width: 70%;
+    height:1em;
     border:none;
-    width:90%;
+    max-width:none;
+    max-height: 200px;
+	vertical-align: top;
+    resize:none;
 }
 
 #ingredientsTable input {

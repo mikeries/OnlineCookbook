@@ -14,7 +14,7 @@ namespace CookBook.Models
         public int RecipeID { get; set; }
 
         [Required]
-        [StringLength(200)]
+        [StringLength(1000)]
         public string StepText { get; set; }
 
         public int StepOrder { get; set; }

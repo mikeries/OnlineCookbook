@@ -55,6 +55,12 @@
 
 @if (Model.Procedures != null)
 {
+    var list =
+    from i in Model.Procedures
+    orderby i.StepOrder
+    select i;
+
+    Model.Procedures = list.ToList();
     <h3>@Html.DisplayNameFor(model => model.Procedures)</h3>
     <ol>
         @foreach (Procedure procedure in Model.Procedures)

@@ -9,81 +9,81 @@
 {
     @Html.AntiForgeryToken()
 
-    <button type="button" onclick='location.href="@Url.Action("Index", "Recipes")"'
-            class="btn btn-submenu">
-        Index
-    </button>
-    <button type="button" onclick='location.href="@Url.Action("Details", "Recipes", new { id = Model.RecipeID })"'
-            class="btn btn-submenu">
-        Back
-    </button>
-
-    <input type="submit" class="btn btn-submenu" value="Save" />
+    <div class="submenu row">
+        <button type="button" onclick='location.href="@Url.Action("Index", "Recipes")"'
+                class="btn btn-submenu">
+            Index
+        </button>
+        <button type="button" onclick='location.href="@Url.Action("Details", "Recipes", new { id = Model.RecipeID })"'
+                class="btn btn-submenu">
+            Back
+        </button>
+        <input type="submit" class="btn btn-submenu" value="Save" />
+    </div>
 
     <div class="form-horizontal recipeEditPage">
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.RecipeID)
 
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control recipeNameField" } })
-                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.TextAreaFor(model => model.Description, new { @class = "form-control recipeDescriptionField", @rows = "4" })
-                        @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
-                    </div>
+        <div id="recipe">
+            <div class="form-group row">
+                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-1" })
+                <div class="col-md-11">
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control recipeNameField" } })
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger", @style="display: none;" })
                 </div>
             </div>
 
-            <div class="col-md-6">
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Servings, htmlAttributes: new { @class = "control-label col-md-4" })
-                    <div class="col-md-8">
+            <div class="form-group row">
+                @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-1" })
+                <div class="col-md-11">
+                    @Html.TextAreaFor(model => model.Description, new { @class = "form-control recipeDescriptionField", @rows = "4" })
+                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger", @style = "display: none;" })
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-2">
+                    @Html.LabelFor(model => model.Servings, htmlAttributes: new { @class = "control-label col-md-6" })
+                    <div class="col-md-6">
                         @Html.EditorFor(model => model.Servings, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.Servings, "", new { @class = "text-danger" })
+                        @Html.ValidationMessageFor(model => model.Servings, "", new { @class = "text-danger", @style = "display: none;" })
                     </div>
                 </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.PreperationTime, htmlAttributes: new { @class = "control-label col-md-4" })
-                    <div class="col-md-8">
+                    
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(model => model.PreperationTime, htmlAttributes: new { @class = "control-label col-md-6" })
+                    <div class="col-md-6">
                         @Html.EditorFor(model => model.PreperationTime, new { htmlAttributes = new { @class = "form-control timeInput" } })
-                        @Html.ValidationMessageFor(model => model.PreperationTime, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.InactiveTime, htmlAttributes: new { @class = "control-label col-md-4" })
-                    <div class="col-md-8">
-                        @Html.EditorFor(model => model.InactiveTime, new { htmlAttributes = new { @class = "form-control timeInput" } })
-                        @Html.ValidationMessageFor(model => model.InactiveTime, "", new { @class = "text-danger" })
+                        @Html.ValidationMessageFor(model => model.PreperationTime, "", new { @class = "text-danger", @style = "display: none;" })
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(model => model.InactiveTime, htmlAttributes: new { @class = "control-label col-md-6" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.InactiveTime, new { htmlAttributes = new { @class = "form-control timeInput" } })
+                        @Html.ValidationMessageFor(model => model.InactiveTime, "", new { @class = "text-danger", @style = "display: none;" })
+                    </div>
+                </div>
+
+                <div class="form-group col-md-3">
                     @Html.LabelFor(model => model.CookTime, htmlAttributes: new { @class = "control-label col-md-4" })
                     <div class="col-md-8">
                         @Html.EditorFor(model => model.CookTime, new { htmlAttributes = new { @class = "form-control timeInput" } })
-                        @Html.ValidationMessageFor(model => model.CookTime, "", new { @class = "text-danger" })
+                        @Html.ValidationMessageFor(model => model.CookTime, "", new { @class = "text-danger", @style = "display: none;" })
                     </div>
                 </div>
             </div>
+            <div id="recipeErrors" class="errorContainer"></div>
         </div>
 
-        <h4>
-            Ingredients
-            <input type="button" value="+" onclick="addRow();" title="Click to add a new ingredient."
-                   class="btn btn-default" />
-        </h4>
-        <row>
+        <div id="ingredientsTable" class="row">
+            <h4>
+                Ingredients
+                <input type="button" value="+" onclick="addRow();" title="Click to add a new ingredient."
+                       class="btn btn-default" />
+            </h4>
+
             <table border="1" cellpadding="6">
                 <thead>
                     <tr>
@@ -100,7 +100,7 @@
                         <th></th>
                     </tr>
                 </thead>
-                <tbody id="ingredientsTable">
+                <tbody>
 
                     @{
                         var sortedList =
@@ -155,10 +155,8 @@
                     }
                 </tbody>
             </table>
-            <div id="ingredientErrors"></div>
-        </row>
-
-        <p></p>
+        </div>
+        <div id="ingredientErrors" class="well alert alert-danger"></div>
 
         <h4>
             @Html.DisplayNameFor(model => model.Procedures)
@@ -179,16 +177,22 @@
                 <li class="recipeStep">
                     <input type="hidden" name="Procedures.Index" value="@stepIndex" />
                     <input type="hidden" name="Procedures[@stepIndex].ProcedureID" value=@procedure.ProcedureID />
-                    <input class="text-box single-line"
-                           id=@("Procedures_"+stepIndex+"__StepText") name=@("Procedures["+stepIndex+"].StepText") type="text" value="@procedure.StepText" />
+                    <textarea rows="1" data-val="true" data-val-length-max="1000"
+                        data-val-length="The field Description must be a string with a maximum length of 1000."
+                        id=@("Procedures_"+stepIndex+"__StepText") 
+                        name=@("Procedures["+stepIndex+"].StepText")>@procedure.StepText</textarea>
+                    <span class="field-validation-valid text-danger" style="display: none" data-valmsg-replace="true"
+                          data-valmsg-for="@("Procedures["+stepIndex+"].StepText")"></span>
                 </li>
             }
         }
         </ol>
+        <div id="procedureErrors" class="row"></div>
+
 
     </div>
 
-                        }
+}
 
 @* include hidden templates used to create new ingredients and steps *@
 <table>
@@ -228,24 +232,38 @@
     <li class="templateStep recipeStep">
         <input type="hidden" name="Procedures.Index" value="#" />
         <input type="hidden" name="Procedures[#].ProcedureID" value="0" />
-        <input class="text-box single-line"
-               id="Procedures_#__StepText" name="Procedures[#].StepText" type="text" value="" />
+        <textarea data-val="true" rows="1" class="text-box single-line" data-val-length-max="1000"
+                data-val-length="The field Description must be a string with a maximum length of 1000."
+               id="Procedures_#__StepText" name="Procedures[#].StepText"></textarea>
+        <span class="field-validation-valid text-danger" style="display: none" data-valmsg-replace="true"
+              data-valmsg-for="Procedures[#].StepText"></span>
     </li>
 </ol>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-
     <script src="~/Scripts/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+    <script src="~/Scripts/autosize.min.js"></script>
+
     <script>
+        var errorContainerMap = {
+            "#ingredientsTable": "#ingredientErrors",
+            "#recipe": "#recipeErrors",
+            "#procedureList": "#procedureErrors"
+        };
+
         $(document).ready(function () {
 
-            $("#ingredientsTable").sortable({
+            $("#ingredientsTable tbody").sortable({
                 revert: true
             });
             $("#procedureList").sortable({
                 revert:true
             });
+
+            autosize($('#procedureList textarea'));
+
+            $("#procedureList li textarea").on('blur', removeStepIfEmpty);
 
             parseValidator($('form'));
         });
@@ -258,12 +276,27 @@
             form.data("validator").settings.onfocusout = function (element) { $(element).valid(); };
             form.data("validator").settings.showErrors = function (errorMap, errorList) {
                 this.defaultShowErrors();
-                $("#ingredientErrors").empty();
-                $(".field-validation-error span", $('#ingredientsTable'))
-                    .clone()
-                    .appendTo("#ingredientErrors")
-                    .wrap("<li>");
+                dispatchErrorsToContainers();
             };
+        }
+
+        function dispatchErrorsToContainers() {
+            for (var key in errorContainerMap) {
+                if (errorContainerMap.hasOwnProperty(key)) {
+                    var errors = errorContainerMap[key];
+                    $errorContainer = $(errors);
+                    $errorContainer.empty();
+                    $(".field-validation-error span", $(key))
+                        .clone()
+                        .appendTo(errors)
+                        .wrap("<div>");
+                    if ($errorContainer.children('div').length) {
+                        $errorContainer.show();
+                    } else {
+                        $errorContainer.hide();
+                    }
+                }
+            }
         }
 
         //http://stackoverflow.com/questions/28019793/submit-same-partial-view-called-multiple-times-data-to-controller/28081308#28081308
@@ -276,9 +309,13 @@
             var index = (new Date()).getTime();
             clone.html($(clone).html().replace(/#/g, index));
 
-            $('#ingredientsTable').append(clone);
+            $('#ingredientsTable tbody').append(clone);
             parseValidator($('form'));
             clone.show();
+        }
+
+        function deleteRow(event) {
+            $(event.target).closest('tr').remove();
         }
 
         function addStep() {
@@ -287,14 +324,19 @@
 
             var index = (new Date()).getTime();
             clone.html($(clone).html().replace(/#/g, index));
+            clone.find('textarea').on('blur', removeStepIfEmpty);
 
             $('#procedureList').append(clone);
-            parseValidator($('form'));
             clone.show();
+            autosize(clone.find('textarea'));
+            parseValidator($('form'));
         }
 
-        function deleteRow(event) {
-            $(event.target).closest('tr').remove();
+        function removeStepIfEmpty(event) {
+            if (event.target.value == "") {
+                $(event.target).closest('li').remove();
+            }
         }
+
     </script>
 }
