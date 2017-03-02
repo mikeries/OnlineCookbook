@@ -34,7 +34,7 @@ namespace CookBook.Controllers
             ViewBag.CurrentFilter = searchString;
             string currentUser = User.Identity.GetUserId();
 
-            var recipes = db.Recipes.Include(f => f.Ingredients).Where(u=>u.UserID == currentUser);
+            var recipes = db.Recipes.Include(f => f.Ingredients).Where(u => u.UserID == currentUser);
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -64,7 +64,10 @@ namespace CookBook.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Recipe recipe = db.Recipes.Where(x => x.RecipeID == id).Include(i => i.Ingredients).SingleOrDefault();
+
+            string currentUser = User.Identity.GetUserId();
+
+            Recipe recipe = db.Recipes.Where(u => u.UserID == currentUser).Where(x => x.RecipeID == id).Include(i => i.Ingredients).SingleOrDefault();
             if (recipe == null)
             {
                 return HttpNotFound();
@@ -91,12 +94,20 @@ namespace CookBook.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Recipe recipe = db.Recipes.Include("Ingredients").Include("Procedures").AsNoTracking().FirstOrDefault(e => id == e.RecipeID);
+            string currentUser = User.Identity.GetUserId();
+            Recipe recipe = db.Recipes.Where(u => u.UserID == currentUser)
+                .Include("Ingredients").Include("Procedures").AsNoTracking().FirstOrDefault(e => id == e.RecipeID);
+
+            if (recipe == null)
+            {
+                return HttpNotFound();
+            }
+
             recipe.Name = recipe.Name + " (copy)";
             db.Recipes.Add(recipe);
             db.SaveChanges();
-
             return RedirectToAction("Edit", new { id = recipe.RecipeID });
+
         }
 
         // GET: Recipes/Edit/5
@@ -107,7 +118,8 @@ namespace CookBook.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Recipe recipe = db.Recipes.Find(id);
+            string currentUser = User.Identity.GetUserId();
+            Recipe recipe = db.Recipes.Where(u=>u.UserID == currentUser).FirstOrDefault(r=>r.RecipeID == id);
 
             if (recipe == null)
             {
@@ -121,21 +133,31 @@ namespace CookBook.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "RecipeID,Name,Description,Servings,PreperationTime,InactiveTime,CookTime,Ingredients,Procedures")] Recipe recipe)
+        public ActionResult Edit([Bind(Include = "RecipeID,UserID,Name,Description,Servings,PreperationTime,InactiveTime,CookTime,Ingredients,Procedures")] Recipe recipe)
         {
             if (ModelState.IsValid)
             {
                 Recipe dbRecipe = db.Recipes.Find(recipe.RecipeID);
+
+
                 if (dbRecipe != null)
                 {
+                    string currentUser = User.Identity.GetUserId();
+                    if (dbRecipe.UserID != currentUser)
+                    {
+                        return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+                    }
+
                     removeDeletedIngredientsFromDB(recipe, dbRecipe);
                     updateRemainingIngredients(recipe);
                     removeDeletedProceduresFromDB(recipe, dbRecipe);
                     updateRemainingProcedures(recipe);
+
                     db.Entry(dbRecipe).CurrentValues.SetValues(recipe);
                     db.Entry(dbRecipe).State = EntityState.Modified;
                 } else
                 {
+                    recipe.UserID = User.Identity.GetUserId();
                     db.Recipes.Add(recipe);
                 }
 
@@ -249,7 +271,10 @@ namespace CookBook.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Recipe recipe = db.Recipes.Find(id);
+
+            string currentUser = User.Identity.GetUserId();
+
+            Recipe recipe = db.Recipes.Where(r=>r.UserID == currentUser).FirstOrDefault(r => r.RecipeID == id);
             if (recipe == null)
             {
                 return HttpNotFound();
@@ -263,8 +288,11 @@ namespace CookBook.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Recipe recipe = db.Recipes.Find(id);
-            db.Recipes.Remove(recipe);
-            db.SaveChanges();
+            if (recipe.UserID == User.Identity.GetUserId())
+            {
+                db.Recipes.Remove(recipe);
+                db.SaveChanges();
+            }
             return RedirectToAction("Index");
         }
 
