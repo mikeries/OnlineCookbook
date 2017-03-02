@@ -28,7 +28,7 @@ textarea {
 }
 
 .submenu {
-    margin-left:0;
+    margin-left:10px;
 }
 
 .submenu .btn {
@@ -39,16 +39,25 @@ textarea {
     border-color: #cccccc;
 }
 
-.recipeDescriptionField,
-.recipeEditPage .recipeNameField {
+@media print {
+    .submenu {
+        display: none !important;
+    }
+}
+
+/*------Recipe Editor -------------------------------------------------------------------- */
+
+#recipeEditPage .descriptionField,
+#recipeEditPage .nameField {
     width:100%;
     max-width:none;
 }
-.recipeEditPage h4{
+
+#recipeEditPage h4{
     margin-left:10px;
 }
 
-.recipeDescriptionField {
+#recipeEditPage .descriptionField {
     resize:none;
 }
 
@@ -63,23 +72,24 @@ textarea {
     border:none;
 }
 
-.gripColumn,
-.buttonColumn {
+#ingredientsTable .gripColumn,
+#ingredientsTable .buttonColumn {
     width:20px;
 }
 
-.quantityColumn input {
+#ingredientsTable .quantityColumn input {
     max-width:50px;
 }
 
-.unitOfMeasurementColumn input {
+#ingredientsTable .unitOfMeasurementColumn input {
     max-width:60px;
 }
 
-.descriptionColumn {
+#ingredientsTable .descriptionColumn {
     width:100%;
 }
-.descriptionColumn input {
+
+#ingredientsTable .descriptionColumn input {
     width:100%;
     max-width:none;
 }
@@ -90,7 +100,7 @@ textarea {
     margin-right:auto;
 }
 
-.recipeStep textarea{
+#procedureList .recipeStep textarea{
     width: 100%;
     height:1em;
     border:none;
@@ -102,7 +112,6 @@ textarea {
 
 .ingredientsList {
     columns: 2;
-    marker:none;
     column-gap:40px;
     width:80%;
 }

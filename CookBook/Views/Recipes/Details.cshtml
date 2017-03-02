@@ -27,6 +27,21 @@
     @Html.DisplayFor(model => model.Description)
 </p>
 
+<div class="row">
+    @if (Model.PreperationTime != null)
+    {
+        <div class="col-md-3">@Html.DisplayNameFor(model => model.PreperationTime): @Html.DisplayFor(model => model.PreperationTime) minutes</div>
+    }
+    @if (Model.InactiveTime != null)
+    {
+        <div class="col-md-3">@Html.DisplayNameFor(model => model.InactiveTime): @Html.DisplayFor(model => model.InactiveTime) minutes</div>
+    }
+    @if (Model.CookTime != null)
+    {
+        <div class="col-md-3">@Html.DisplayNameFor(model => model.CookTime): @Html.DisplayFor(model => model.CookTime) minutes</div>
+    }
+</div>
+
 <hr />
 <ul class="ingredientsList">
     @if (Model.Ingredients != null)
@@ -48,11 +63,12 @@
         }
     }
 </ul>
-<p></p>
 
 @if(Model.Servings != null) {
     <p>@Html.DisplayFor(model => model.Servings) @Html.DisplayNameFor(model => model.Servings)</p>
 }
+
+<hr />
 
 @if (Model.Procedures != null)
 {
@@ -62,7 +78,7 @@
     select i;
 
     Model.Procedures = list.ToList();
-    <h3>@Html.DisplayNameFor(model => model.Procedures)</h3>
+    <h3>Procedure</h3>
     <ol>
         @foreach (Procedure procedure in Model.Procedures)
         {
@@ -78,20 +94,3 @@
     <h3>@Html.DisplayNameFor(model => model.Comments)</h3>
     <p>@Html.DisplayFor(model => model.Comments)</p>
 }
-
-<hr />
-<div class="row">
-    @if (Model.PreperationTime != null)
-    {
-        <div class="col-md-3">@Html.DisplayNameFor(model => model.PreperationTime): @Html.DisplayFor(model => model.PreperationTime) minutes</div>
-    }
-    @if (Model.InactiveTime != null)
-    {
-        <div class="col-md-3">@Html.DisplayNameFor(model => model.InactiveTime): @Html.DisplayFor(model => model.InactiveTime) minutes</div>
-    }
-    @if (Model.CookTime != null)
-    {
-        <div class="col-md-3">@Html.DisplayNameFor(model => model.CookTime): @Html.DisplayFor(model => model.CookTime) minutes</div>
-    }
-</div>
-<hr />

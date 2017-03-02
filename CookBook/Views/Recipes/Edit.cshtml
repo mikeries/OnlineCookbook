@@ -19,16 +19,20 @@
             Back
         </button>
         <input type="submit" class="btn btn-submenu" value="Save" />
+        <button type="button" onclick='location.href="@Url.Action("Edit", "Recipes", new { id = Model.RecipeID })"'
+                class="btn btn-submenu">
+            Reload
+        </button>
     </div>
 
-    <div class="form-horizontal recipeEditPage">
+    <div id="recipeEditPage" class="form-horizontal">
         @Html.HiddenFor(model => model.RecipeID)
 
         <div id="recipe">
             <div class="form-group row">
                 @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-1" })
                 <div class="col-md-11">
-                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control recipeNameField" } })
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control nameField" } })
                     @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger", @style="display: none;" })
                 </div>
             </div>
@@ -36,7 +40,7 @@
             <div class="form-group row">
                 @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-1" })
                 <div class="col-md-11">
-                    @Html.TextAreaFor(model => model.Description, new { @class = "form-control recipeDescriptionField", @rows="1" })
+                    @Html.TextAreaFor(model => model.Description, new { @class = "form-control descriptionField", @rows="1" })
                     @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger", @style = "display: none;" })
                 </div>
             </div>
@@ -115,7 +119,7 @@
                                 <td class="gripColumn" title="Drag to reorder ingredients.">
                                     <span class="ui-icon ui-icon-caret-2-n-s"></span>
                                     <input type="hidden" name="Ingredients.Index" value="@rowIndex" />
-                                    <input type="hidden" name="ingredients[@rowIndex].IngredientID" value=@ingredient.IngredientID />
+                                    <input type="hidden" name="ingredients[@rowIndex].IngredientID" value="@ingredient.IngredientID" />
                                 </td>
                                 <td class="quantityColumn">
                                     <input class="text-box single-line" title="Please enter a number."
@@ -123,7 +127,7 @@
                                            id="@("Ingredients_" + rowIndex + "__Quantity")"
                                            name="@("Ingredients[" + rowIndex + "].Quantity")" type="text"
                                            value="@ingredient.Quantity" />
-                                    <span class="field-validation-valid text-danger ingredientError" style="display: none" data-valmsg-replace="true"
+                                    <span class="field-validation-valid text-danger" style="display: none" data-valmsg-replace="true"
                                           data-valmsg-for="@("Ingredients[" + rowIndex + "].Quantity")"></span>
                                 </td>
                                 <td class="unitOfMeasurementColumn">
@@ -133,7 +137,7 @@
                                            id="@("Ingredients_" + rowIndex + "__UnitOfMeasurement")"
                                            name="@("Ingredients[" + rowIndex + "].UnitOfMeasurement")" type="text"
                                            value="@ingredient.UnitOfMeasurement" />
-                                    <span class="field-validation-valid text-danger ingredientError" style="display: none" data-valmsg-replace="true"
+                                    <span class="field-validation-valid text-danger" style="display: none" data-valmsg-replace="true"
                                           data-valmsg-for="@("Ingredients[" + rowIndex + "].UnitOfMeasurement")"></span>
                                 </td>
                                 <td class="descriptionColumn">
@@ -244,99 +248,5 @@
     @Scripts.Render("~/bundles/jqueryval")
     <script src="~/Scripts/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
     <script src="~/Scripts/autosize.min.js"></script>
-
-    <script>
-        var errorContainerMap = {
-            "#ingredientsTable": "#ingredientErrors",
-            "#recipe": "#recipeErrors",
-            "#procedureList": "#procedureErrors"
-        };
-
-        $(document).ready(function () {
-
-            $("#ingredientsTable tbody").sortable({
-                revert: true
-            });
-            $("#procedureList").sortable({
-                revert:true
-            });
-
-            autosize($('textarea'));
-
-            $("#procedureList li textarea").on('blur', removeStepIfEmpty);
-
-            parseValidator($('form'));
-        });
-
-        function parseValidator(form) {
-            form.data('validator', null);
-            $.validator.unobtrusive.parse(form);
-
-            // copy any ingredient validation errors to the summary div
-            form.data("validator").settings.onfocusout = function (element) { $(element).valid(); };
-            form.data("validator").settings.showErrors = function (errorMap, errorList) {
-                this.defaultShowErrors();
-                dispatchErrorsToContainers();
-            };
-        }
-
-        function dispatchErrorsToContainers() {
-            for (var key in errorContainerMap) {
-                if (errorContainerMap.hasOwnProperty(key)) {
-                    var errors = errorContainerMap[key];
-                    $errorContainer = $(errors);
-                    $errorContainer.empty();
-                    $(".field-validation-error span", $(key))
-                        .clone()
-                        .appendTo(errors)
-                        .wrap("<div>");
-                    if ($errorContainer.children('div').length) {
-                        $errorContainer.show();
-                    } else {
-                        $errorContainer.hide();
-                    }
-                }
-            }
-        }
-
-        //http://stackoverflow.com/questions/28019793/submit-same-partial-view-called-multiple-times-data-to-controller/28081308#28081308
-        //http://stackoverflow.com/questions/29837547/set-class-validation-for-dynamic-textbox-in-a-table/29838689#29838689
-
-        function addRow() {
-            var clone = $(".templateRow").clone();
-            clone.removeClass("templateRow")
-
-            var index = (new Date()).getTime();
-            clone.html($(clone).html().replace(/#/g, index));
-
-            $('#ingredientsTable tbody').append(clone);
-            parseValidator($('form'));
-            clone.show();
-        }
-
-        function deleteRow(event) {
-            $(event.target).closest('tr').remove();
-        }
-
-        function addStep() {
-            var clone = $(".templateStep").clone();
-            clone.removeClass("templateStep")
-
-            var index = (new Date()).getTime();
-            clone.html($(clone).html().replace(/#/g, index));
-            clone.find('textarea').on('blur', removeStepIfEmpty);
-
-            $('#procedureList').append(clone);
-            clone.show();
-            autosize(clone.find('textarea'));
-            parseValidator($('form'));
-        }
-
-        function removeStepIfEmpty(event) {
-            if (event.target.value == "") {
-                $(event.target).closest('li').remove();
-            }
-        }
-
-    </script>
+    <script src="~/Scripts/recipe-editor.js"></script>
 }

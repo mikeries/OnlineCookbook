@@ -262,6 +262,7 @@
     <Content Include="Views\Recipes\Edit.cshtml" />
     <Content Include="Views\Recipes\Index.cshtml" />
     <Content Include="Views\Recipes\EditorTemplates\Ingredient.cshtml" />
+    <Content Include="Scripts\recipe-editor.js" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
