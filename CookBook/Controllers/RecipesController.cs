@@ -11,15 +11,11 @@ using PagedList;
 
 namespace CookBook.Controllers
 {
+    [Authorize]
     public class RecipesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: Recipes
-        //public ActionResult Index()
-        //{
-        //    return View(db.Recipes.ToList());
-        //}
         public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
             ViewBag.CurrentSort = sortOrder;
