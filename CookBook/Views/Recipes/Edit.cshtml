@@ -28,7 +28,7 @@
     <div id="recipeEditPage" class="form-horizontal">
         @Html.HiddenFor(model => model.RecipeID)
 
-        <div id="recipe">
+        <div id="recipe" class="well">
             <div class="form-group row">
                 @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-1" })
                 <div class="col-md-11">
@@ -81,7 +81,7 @@
             <div id="recipeErrors" class="alert alert-danger well" style="display:none;"></div>
         </div>
 
-        <div id="ingredientsTable" class="row">
+        <div id="ingredientsTable" class="row well">
             <h4>
                 Ingredients
                 <button type="button" onclick="addRow();" title="Click to add a new ingredient."
@@ -162,7 +162,7 @@
             <div id="ingredientErrors" class="alert alert-danger well" style="display:none;"></div>
         </div>
 
-        <div class="row">
+        <div class="row well">
             <h4>
                 Procedure
                 <button type="button"onclick="addStep();" title="Click to add a step to the procedure."

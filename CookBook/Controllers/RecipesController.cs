@@ -85,6 +85,21 @@ namespace CookBook.Controllers
             return RedirectToAction("Edit", new { id = recipe.RecipeID });
         }
 
+        public ActionResult Copy(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Recipe recipe = db.Recipes.Include("Ingredients").Include("Procedures").AsNoTracking().FirstOrDefault(e => id == e.RecipeID);
+            recipe.Name = recipe.Name + " (copy)";
+            db.Recipes.Add(recipe);
+            db.SaveChanges();
+
+            return RedirectToAction("Edit", new { id = recipe.RecipeID });
+        }
+
         // GET: Recipes/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -92,7 +107,9 @@ namespace CookBook.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             Recipe recipe = db.Recipes.Find(id);
+
             if (recipe == null)
             {
                 return HttpNotFound();
@@ -110,13 +127,19 @@ namespace CookBook.Controllers
             if (ModelState.IsValid)
             {
                 Recipe dbRecipe = db.Recipes.Find(recipe.RecipeID);
-                removeDeletedIngredientsFromDB(recipe, dbRecipe);
-                updateRemainingIngredients(recipe);
-                removeDeletedProceduresFromDB(recipe, dbRecipe);
-                updateRemainingProcedures(recipe);
+                if (dbRecipe != null)
+                {
+                    removeDeletedIngredientsFromDB(recipe, dbRecipe);
+                    updateRemainingIngredients(recipe);
+                    removeDeletedProceduresFromDB(recipe, dbRecipe);
+                    updateRemainingProcedures(recipe);
+                    db.Entry(dbRecipe).CurrentValues.SetValues(recipe);
+                    db.Entry(dbRecipe).State = EntityState.Modified;
+                } else
+                {
+                    db.Recipes.Add(recipe);
+                }
 
-                db.Entry(dbRecipe).CurrentValues.SetValues(recipe);
-                db.Entry(dbRecipe).State = EntityState.Modified;
                 db.SaveChanges();
 
                 return RedirectToAction("Edit", recipe.RecipeID);
@@ -127,7 +150,6 @@ namespace CookBook.Controllers
         // TODO: is there a way to make these next 4 functions generic and eliminate duplication?
         private void removeDeletedProceduresFromDB(Recipe recipe, Recipe dbRecipe)
         {
-
             List<Procedure> deletedProcedures = null;
             if (recipe.Procedures != null)
             {
