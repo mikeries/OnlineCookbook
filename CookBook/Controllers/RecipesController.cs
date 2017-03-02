@@ -78,24 +78,11 @@ namespace CookBook.Controllers
         public ActionResult Create()
         {
             Recipe recipe = new Models.Recipe();
-            return View(recipe);
-        }
+            recipe.Name = "New Recipe";
+            db.Recipes.Add(recipe);
+            db.SaveChanges();
 
-        // POST: Recipes/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "RecipeID,Name,Description,Directions,Servings,PreperationTime,InactiveTime,CookTime,Comments")] Recipe recipe)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Recipes.Add(recipe);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            return View(recipe);
+            return RedirectToAction("Edit", new { id = recipe.RecipeID });
         }
 
         // GET: Recipes/Edit/5
