@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using CookBook.Models;
 using PagedList;
 
@@ -31,8 +32,9 @@ namespace CookBook.Controllers
             }
 
             ViewBag.CurrentFilter = searchString;
+            string currentUser = User.Identity.GetUserId();
 
-            var recipes = db.Recipes.Include(f => f.Ingredients);
+            var recipes = db.Recipes.Include(f => f.Ingredients).Where(u=>u.UserID == currentUser);
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -50,7 +52,7 @@ namespace CookBook.Controllers
             }
             recipes = recipes.OrderBy(s => s.Name);
 
-            int pageSize = 15;
+            int pageSize = 5;
             int pageNumber = (page ?? 1);
             return View(recipes.ToPagedList(pageNumber, pageSize));
         }
@@ -75,6 +77,7 @@ namespace CookBook.Controllers
         {
             Recipe recipe = new Models.Recipe();
             recipe.Name = "New Recipe";
+            recipe.UserID = User.Identity.GetUserId();
             db.Recipes.Add(recipe);
             db.SaveChanges();
 
